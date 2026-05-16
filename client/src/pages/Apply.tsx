@@ -165,21 +165,33 @@ function InputField({
 
 // ── Step screens ───────────────────────────────────────────────────────────────
 
-function NavAuthButton() {
+function NavSocialProof() {
+  return (
+    <div className="hidden sm:flex items-center gap-2 shrink-0">
+      {/* Star rating */}
+      <div className="flex items-center gap-1">
+        {[1,2,3,4,5].map(i => (
+          <svg key={i} width="12" height="12" viewBox="0 0 12 12" fill="#FBBF24"><path d="M6 1l1.39 2.82L10.5 4.27l-2.25 2.19.53 3.09L6 8.1 3.22 9.55l.53-3.09L1.5 4.27l3.11-.45L6 1z"/></svg>
+        ))}
+      </div>
+      <span className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.55)" }}>4.9 · 200+ cleaners hired</span>
+    </div>
+  );
+}
+
+function AdminNavButton() {
   const { user, isAuthenticated, logout } = useAuth();
   const [, navigate] = useLocation();
-  if (isAuthenticated && user) {
+  if (isAuthenticated && user && user.role === "admin") {
     return (
       <div className="flex items-center gap-2 shrink-0">
-        {user.role === "admin" && (
-          <button
-            onClick={() => navigate("/hiring")}
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all hover:opacity-90"
-            style={{ backgroundColor: "rgba(22,163,74,0.15)", border: "1px solid rgba(22,163,74,0.3)", color: "#16a34a" }}
-          >
-            🏠 Pipeline
-          </button>
-        )}
+        <button
+          onClick={() => navigate("/hiring")}
+          className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all hover:opacity-90"
+          style={{ backgroundColor: "rgba(22,163,74,0.15)", border: "1px solid rgba(22,163,74,0.3)", color: "#16a34a" }}
+        >
+          🏠 Pipeline
+        </button>
         <button
           onClick={() => logout()}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-white transition-all"
@@ -190,15 +202,7 @@ function NavAuthButton() {
       </div>
     );
   }
-  return (
-    <button
-      onClick={() => navigate("/login")}
-      className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:opacity-90 shrink-0"
-      style={{ backgroundColor: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)" }}
-    >
-      Admin Login
-    </button>
-  );
+  return null;
 }
 
 function WelcomeStep({ onNext }: { onNext: () => void }) {
@@ -258,8 +262,11 @@ function WelcomeStep({ onNext }: { onNext: () => void }) {
           <span className="text-xs font-bold tracking-widest uppercase" style={{ color: BRAND_GREEN }}>Now Hiring</span>
         </div>
 
-        {/* Right: auth button */}
-        <NavAuthButton />
+        {/* Right: social proof + admin shortcut (if logged in as admin) */}
+        <div className="flex items-center gap-3">
+          <NavSocialProof />
+          <AdminNavButton />
+        </div>
       </header>
 
       {/* ── Two-column body — fills remaining viewport height ── */}
@@ -584,14 +591,26 @@ function WelcomeStep({ onNext }: { onNext: () => void }) {
             Apply Now
             <ChevronRight size={20} />
           </button>
-          <p className="text-xs mt-4" style={{ color: "rgba(255,255,255,0.25)" }}>Free · No commitment · Positions in DC · MD · VA</p>
+                    <p className="text-xs mt-4" style={{ color: "rgba(255,255,255,0.25)" }}>Free · No commitment · Positions in DC · MD · VA</p>
         </div>
-
+      </div>
+      {/* ── Footer ── */}
+      <div
+        className="flex items-center justify-between px-6 lg:px-10 py-5"
+        style={{ borderTop: `1px solid rgba(255,255,255,0.07)` }}
+      >
+        <p className="text-xs" style={{ color: "rgba(255,255,255,0.2)" }}>© 2025 Maids in Black · Washington DC · MD · VA</p>
+        <a
+          href="/login"
+          className="text-xs transition-colors hover:text-white"
+          style={{ color: "rgba(255,255,255,0.18)" }}
+        >
+          Staff login
+        </a>
       </div>
     </div>
   );
 }
-
 function FaqSection({ darkBg, darkBorder }: { darkBg: string; darkBorder: string }) {
   const [open, setOpen] = React.useState<number | null>(null);
   const faqs = [
