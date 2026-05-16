@@ -175,6 +175,7 @@ export const hiringRouter = router({
             aiScore: r.aiScore ?? null,
             aiSummary: r.aiSummary ?? null,
             interviewCallId: r.interviewCallId ?? null,
+            suppliesPhotoUrl: r.suppliesPhotoUrl ?? null,
             createdAt: r.createdAt instanceof Date ? r.createdAt.getTime() : Number(r.createdAt),
             hasUnreadReply: unreadPhones.has(e164),
           };

@@ -103,6 +103,7 @@ interface Candidate {
   interviewCallId?: string | null;
   hasUnreadReply?: boolean;
   bioPhotoUrl?: string;
+  suppliesPhotoUrl?: string;
   // Full application data
   phone?: string;
   email?: string;
@@ -1092,6 +1093,23 @@ function CandidateDetail({ candidate, onScoreUpdated, onStageAdvanced }: { candi
         <ApplicationDetailsModal candidate={candidate} onClose={() => setShowAppModal(false)} />
       )}
 
+      {/* Cleaning Supplies Photo */}
+      {candidate.suppliesPhotoUrl && (
+        <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid #e2e8f0" }}>
+          <div className="flex items-center gap-2 px-4 py-3" style={{ borderBottom: "1px solid #e2e8f0", backgroundColor: "#f8fafc" }}>
+            <span style={{ fontSize: 13, fontWeight: 600, color: "#0f172a" }}>🧹 Cleaning Supplies</span>
+          </div>
+          <a href={candidate.suppliesPhotoUrl} target="_blank" rel="noopener noreferrer" className="block">
+            <img
+              src={candidate.suppliesPhotoUrl}
+              alt="Cleaning supplies"
+              className="w-full object-cover"
+              style={{ maxHeight: 260 }}
+            />
+          </a>
+        </div>
+      )}
+
       {/* Application Video — plays the applicant's recorded answer from the form */}
       {candidate.videoUrl && (
         <VideoInterviewCard videoUrl={candidate.videoUrl} />
@@ -1766,6 +1784,7 @@ export default function HiringPipeline() {
       interviewCallId: (r as any).interviewCallId ?? null,
       hasUnreadReply: (r as any).hasUnreadReply ?? false,
       bioPhotoUrl: r.bioPhotoUrl ?? undefined,
+      suppliesPhotoUrl: r.suppliesPhotoUrl ?? undefined,
       phone: r.phone,
       email: r.email ?? undefined,
       streetAddress: r.streetAddress ?? undefined,

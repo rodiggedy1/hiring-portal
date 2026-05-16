@@ -1365,7 +1365,7 @@ function ThankYouStep({ candidateId }: { candidateId: number | null }) {
 
   const hiringSteps = [
     { icon: <CheckCircle2 size={18} />, label: "Application submitted", sub: "Completed", done: true },
-    { icon: <Camera size={18} />, label: "Supplies photo", sub: "Do this now", done: false, cta: true },
+    { icon: <Camera size={18} />, label: "Supplies photo", sub: suppliesUploaded ? "Completed" : "Do this now", done: suppliesUploaded, cta: !suppliesUploaded },
     { icon: <PhoneCall size={18} />, label: "AI interview", sub: "Comes next", done: false },
     { icon: <Phone size={18} />, label: "Real interview", sub: "Comes next", done: false },
   ];

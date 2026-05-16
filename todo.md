@@ -36,3 +36,5 @@
 
 - [x] Add Wistia video (ioczkvlwma) to thank you page — same pattern as landing page video
 - [x] Fix cleaning supplies photo upload on thank you page — upload to S3 and save to candidate record
+- [x] Show suppliesPhotoUrl thumbnail in HiringPipeline candidate detail card
+- [x] Mark "Supplies photo" hiringSteps card as done after successful upload in ThankYouStep
