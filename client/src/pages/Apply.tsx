@@ -1321,6 +1321,32 @@ function ThankYouStep({ candidateId }: { candidateId: number | null }) {
   // In preview mode (?step=done with no real candidateId), use a placeholder so the page renders fully
   const isPreview = !candidateId && new URLSearchParams(window.location.search).get("step") === "done";
   const interviewUrl = candidateId ? `/interview/${candidateId}` : (isPreview ? "#" : null);
+  const suppliesInputRef = React.useRef<HTMLInputElement>(null);
+  const [suppliesUploading, setSuppliesUploading] = React.useState(false);
+  const [suppliesUploaded, setSuppliesUploaded] = React.useState(false);
+  const saveSuppliesPhoto = trpc.hiring.saveSuppliesPhoto.useMutation();
+
+  const handleSuppliesUpload = async (file: File) => {
+    if (!candidateId || suppliesUploading) return;
+    setSuppliesUploading(true);
+    try {
+      const res = await fetch("/api/upload/video", {
+        method: "POST",
+        headers: { "Content-Type": file.type || "image/jpeg" },
+        body: file,
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error(await res.text());
+      const { url } = await res.json();
+      await saveSuppliesPhoto.mutateAsync({ candidateId, suppliesPhotoUrl: url });
+      setSuppliesUploaded(true);
+      toast.success("Supplies photo uploaded! We'll review it shortly.");
+    } catch (err: unknown) {
+      toast.error((err as Error).message || "Upload failed. Please try again.");
+    } finally {
+      setSuppliesUploading(false);
+    }
+  };
 
   const questions = [
     "Tell us about your cleaning experience",
@@ -1367,20 +1393,16 @@ function ThankYouStep({ candidateId }: { candidateId: number | null }) {
               <h2 className="text-2xl md:text-3xl font-extrabold leading-tight mb-4" style={{ color: "#94a3b8" }}>Send us a photo of your<br />cleaning supplies.</h2>
               <p className="text-gray-500 text-base mb-6 max-w-lg">Before your interview, we need to see your supplies. It takes 30 seconds and helps us fast-track your application.</p>
 
-              {/* Wistia video — inline under headline */}
+              {/* Wistia thank-you video */}
               <div className="rounded-2xl overflow-hidden mb-8" style={{ border: "1px solid #e5e7eb" }}>
-                {/* Replace WISTIA_VIDEO_ID with your real Wistia video ID */}
-                <div className="relative w-full" style={{ paddingBottom: "56.25%", backgroundColor: "#f1f5f9" }}>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-                    <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ backgroundColor: "#e2e8f0" }}>
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path d="M8 5.14v14l11-7-11-7z" fill="#94a3b8" />
-                      </svg>
-                    </div>
-                    <p className="text-sm text-gray-400 font-medium">Video placeholder</p>
-                    <p className="text-xs text-gray-300">Replace with Wistia embed</p>
-                  </div>
-                </div>
+                <style>{`wistia-player[media-id='ioczkvlwma']:not(:defined){background:center/contain no-repeat url('https://fast.wistia.com/embed/medias/ioczkvlwma/swatch');display:block;filter:blur(5px);padding-top:56.25%;}`}</style>
+                {/* @ts-ignore */}
+                <wistia-player
+                  media-id="ioczkvlwma"
+                  seo="false"
+                  aspect="1.7777777777777777"
+                  style={{ width: "100%", display: "block" }}
+                />
               </div>
 
               {/* Supplies upload CTA */}
@@ -1392,14 +1414,30 @@ function ThankYouStep({ candidateId }: { candidateId: number | null }) {
                   <div className="flex-1">
                     <p className="font-bold text-gray-900 text-sm mb-1">📸 Upload a photo of your cleaning supplies</p>
                     <p className="text-xs text-gray-500 mb-3">Mop, vacuum, cleaning products — whatever you use. A quick phone photo is fine.</p>
+                    <input
+                      ref={suppliesInputRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => { const f = e.target.files?.[0]; if (f) handleSuppliesUpload(f); }}
+                    />
                     <div className="flex flex-wrap gap-2">
-                      <a
-                        href={interviewUrl || "#"}
-                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-white font-semibold text-sm transition-opacity hover:opacity-90"
-                        style={{ backgroundColor: "#d97706" }}
-                      >
-                        <Camera size={14} /> Upload photo now
-                      </a>
+                      {suppliesUploaded ? (
+                        <span className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-white font-semibold text-sm" style={{ backgroundColor: "#16a34a" }}>
+                          <CheckCircle2 size={14} /> Photo uploaded!
+                        </span>
+                      ) : (
+                        <button
+                          onClick={() => suppliesInputRef.current?.click()}
+                          disabled={suppliesUploading || !candidateId}
+                          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-white font-semibold text-sm transition-opacity hover:opacity-90 disabled:opacity-60"
+                          style={{ backgroundColor: "#d97706" }}
+                        >
+                          {suppliesUploading
+                            ? <><span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" /> Uploading…</>
+                            : <><Camera size={14} /> Upload photo now</>}
+                        </button>
+                      )}
                       <button
                         className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-100"
                         style={{ border: "1.5px solid #e5e7eb", backgroundColor: "#fff" }}

@@ -360,6 +360,21 @@ export const hiringRouter = router({
     /**
      * Public — saves the recorded camera video URL after interview ends.
      */
+    saveSuppliesPhoto: publicProcedure
+      .input(z.object({
+        candidateId: z.number(),
+        suppliesPhotoUrl: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "DB unavailable" });
+        const { candidates } = await import("../drizzle/schema");
+        await db.update(candidates)
+          .set({ suppliesPhotoUrl: input.suppliesPhotoUrl })
+          .where(eq(candidates.id, input.candidateId));
+        return { success: true };
+      }),
+
     saveInterviewVideo: publicProcedure
       .input(z.object({
         candidateId: z.number(),

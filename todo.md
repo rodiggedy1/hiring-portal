@@ -33,3 +33,6 @@
 
 ## Tests
 - [x] 10 Vitest tests passing (auth.logout, auth.me, admin.setUserRole RBAC, hiring.getCandidates RBAC, hiring.submitApplication public access)
+
+- [x] Add Wistia video (ioczkvlwma) to thank you page — same pattern as landing page video
+- [x] Fix cleaning supplies photo upload on thank you page — upload to S3 and save to candidate record

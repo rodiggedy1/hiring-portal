@@ -57,6 +57,7 @@ export const candidates = mysqlTable(
     // Pipeline stage
     stage: varchar("stage", { length: 64 }).notNull().default("Application Submitted"),
     bioPhotoUrl: text("bioPhotoUrl"),
+    suppliesPhotoUrl: text("suppliesPhotoUrl"),
     videoUrl: text("videoUrl"),
     interviewVideoUrl: text("interviewVideoUrl"),
     // AI evaluation
