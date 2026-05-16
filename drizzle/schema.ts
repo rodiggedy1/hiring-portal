@@ -1,12 +1,16 @@
 import {
   int,
+  index,
+  longtext,
   mysqlEnum,
   mysqlTable,
   text,
   timestamp,
+  tinyint,
   varchar,
 } from "drizzle-orm/mysql-core";
 
+// ─── Users (auth) ─────────────────────────────────────────────────────────────
 export const users = mysqlTable("users", {
   id: int("id").autoincrement().primaryKey(),
   openId: varchar("openId", { length: 64 }).notNull().unique(),
@@ -22,85 +26,80 @@ export const users = mysqlTable("users", {
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
-// ─── Jobs ────────────────────────────────────────────────────────────────────
-
-export const jobs = mysqlTable("jobs", {
-  id: int("id").autoincrement().primaryKey(),
-  title: varchar("title", { length: 255 }).notNull(),
-  department: varchar("department", { length: 128 }).notNull(),
-  location: varchar("location", { length: 128 }).notNull(),
-  type: mysqlEnum("type", ["Full time", "Part time", "Contract", "Internship"])
-    .default("Full time")
-    .notNull(),
-  description: text("description").notNull(),
-  requirements: text("requirements").notNull(),
-  summary: varchar("summary", { length: 512 }),
-  status: mysqlEnum("status", ["draft", "published", "closed"])
-    .default("draft")
-    .notNull(),
-  createdBy: int("createdBy"),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-});
-
-export type Job = typeof jobs.$inferSelect;
-export type InsertJob = typeof jobs.$inferInsert;
-
-// ─── Candidates ──────────────────────────────────────────────────────────────
-
-export const candidates = mysqlTable("candidates", {
-  id: int("id").autoincrement().primaryKey(),
-  userId: int("userId").notNull().unique(),
-  name: varchar("name", { length: 255 }).notNull(),
-  email: varchar("email", { length: 320 }).notNull(),
-  phone: varchar("phone", { length: 64 }),
-  skills: text("skills"),
-  resumeKey: varchar("resumeKey", { length: 512 }),
-  resumeUrl: varchar("resumeUrl", { length: 1024 }),
-  linkedIn: varchar("linkedIn", { length: 512 }),
-  portfolio: varchar("portfolio", { length: 512 }),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-});
+// ─── Candidates (hiring pipeline) ─────────────────────────────────────────────
+/**
+ * Stores job applications submitted via the public /apply form.
+ * Each row represents one applicant moving through the hiring pipeline.
+ */
+export const candidates = mysqlTable(
+  "candidates",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    // Basic info
+    firstName: varchar("firstName", { length: 128 }).notNull(),
+    lastName: varchar("lastName", { length: 128 }).notNull(),
+    email: varchar("email", { length: 320 }),
+    phone: varchar("phone", { length: 30 }).notNull(),
+    // Address
+    streetAddress: varchar("streetAddress", { length: 255 }),
+    apt: varchar("apt", { length: 64 }),
+    city: varchar("city", { length: 128 }),
+    state: varchar("state", { length: 8 }),
+    zip: varchar("zip", { length: 16 }),
+    // Requirements
+    hasCleaning: tinyint("hasCleaning"),
+    hasBankAccount: tinyint("hasBankAccount"),
+    isAuthorized: tinyint("isAuthorized"),
+    consentBackground: tinyint("consentBackground"),
+    experience: text("experience"),
+    // Specialties (JSON array of strings)
+    specialties: text("specialties"),
+    // Pipeline stage
+    stage: varchar("stage", { length: 64 }).notNull().default("Application Submitted"),
+    bioPhotoUrl: text("bioPhotoUrl"),
+    videoUrl: text("videoUrl"),
+    interviewVideoUrl: text("interviewVideoUrl"),
+    // AI evaluation
+    aiScore: int("aiScore"),
+    aiSummary: text("aiSummary"),
+    // AI interview
+    interviewCallId: varchar("interviewCallId", { length: 128 }),
+    interviewTranscript: longtext("interviewTranscript"),
+    interviewScore: int("interviewScore"),
+    interviewSummary: text("interviewSummary"),
+    // Status page magic link token
+    statusToken: varchar("statusToken", { length: 64 }),
+    // Manually scheduled interview call time
+    scheduledCallAt: timestamp("scheduledCallAt"),
+    // Archived (hidden from pipeline but not deleted)
+    archived: tinyint("archived").notNull().default(0),
+    // Metadata
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  },
+  (table) => ({
+    idxPhone: index("idx_cand_phone").on(table.phone),
+    idxStage: index("idx_cand_stage").on(table.stage),
+    idxCreated: index("idx_cand_created").on(table.createdAt),
+  })
+);
 
 export type Candidate = typeof candidates.$inferSelect;
 export type InsertCandidate = typeof candidates.$inferInsert;
 
-// ─── Applications ─────────────────────────────────────────────────────────────
+// ─── Interview video chunks ───────────────────────────────────────────────────
+export const interviewChunks = mysqlTable(
+  "interview_chunks",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    sessionId: varchar("sessionId", { length: 128 }).notNull(),
+    chunkIndex: int("chunkIndex").notNull(),
+    s3Key: varchar("s3Key", { length: 512 }).notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => ({
+    idxSession: index("idx_ichunk_session").on(table.sessionId),
+  })
+);
 
-export const applications = mysqlTable("applications", {
-  id: int("id").autoincrement().primaryKey(),
-  jobId: int("jobId").notNull(),
-  candidateId: int("candidateId").notNull(),
-  status: mysqlEnum("status", [
-    "Applied",
-    "Screening",
-    "Interview",
-    "Offer",
-    "Hired",
-    "Rejected",
-  ])
-    .default("Applied")
-    .notNull(),
-  coverLetter: text("coverLetter"),
-  // Answers to multi-step form questions stored as JSON string
-  formAnswers: text("formAnswers"),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-});
-
-export type Application = typeof applications.$inferSelect;
-export type InsertApplication = typeof applications.$inferInsert;
-
-// ─── Application Notes ────────────────────────────────────────────────────────
-
-export const applicationNotes = mysqlTable("application_notes", {
-  id: int("id").autoincrement().primaryKey(),
-  applicationId: int("applicationId").notNull(),
-  authorId: int("authorId").notNull(),
-  content: text("content").notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-});
-
-export type ApplicationNote = typeof applicationNotes.$inferSelect;
-export type InsertApplicationNote = typeof applicationNotes.$inferInsert;
+export type InterviewChunk = typeof interviewChunks.$inferSelect;

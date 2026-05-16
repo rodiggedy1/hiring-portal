@@ -1,46 +1,35 @@
 # Hiring Portal Susan — TODO
 
+## Source & Design
+- [x] Clone LeadFlow source repo (github.com/rodiggedy1/leadflow-railway)
+- [x] Extract exact hiring UI files from LeadFlow source
+
 ## Database Schema
-- [x] Jobs table (id, title, department, location, type, description, requirements, status, createdAt)
-- [x] Candidates table (id, userId, name, email, phone, skills, resumeKey, resumeUrl, createdAt)
-- [x] Applications table (id, jobId, candidateId, status, coverLetter, createdAt, updatedAt)
-- [x] ApplicationNotes table (id, applicationId, authorId, content, createdAt)
+- [x] Candidates table (exact LeadFlow schema: firstName, lastName, phone, email, address, specialties, stage, aiScore, aiSummary, videoUrl, statusToken, etc.)
+- [x] InterviewChunks table (for AI interview transcript storage)
 - [x] Push all migrations via webdev_execute_sql
-- [x] Sample job listings seeded (5 published positions)
 
-## Server Routers
-- [x] jobs router: list (public), getById (public), create/update/delete (admin)
-- [x] applications router: submit (authenticated), listByJob (admin), listMine (candidate), updateStatus (admin)
-- [x] candidates router: getProfile, updateProfile, uploadResume
-- [x] notes router: addNote, listNotes (admin)
-- [x] notifications: email owner on new application via notifyOwner
-- [x] Role-based access: adminProcedure guard on admin routes
-- [x] Duplicate application prevention
+## Server
+- [x] hiringRouter.ts: submitApplication (public), getCandidates (admin), updateStage, archiveCandidate, deleteCandidate, getPipelineStats, getInterviewConfig, saveInterviewCallId, getSessionByPhone, getStatusByToken, getInterviewChunks, saveInterviewChunk, scoreInterview
+- [x] admin router: setUserRole
+- [x] AI scoring on application submit (LLM, non-blocking)
+- [x] Owner notification on new application
+- [x] agentProcedure alias for adminProcedure
+- [x] SMS stub (opens native sms: link, no external dependency)
 
-## Public Frontend (LeadFlow clone)
-- [x] Global theme: dark bg #141a24, accent #c1ffdf, Satoshi font, pill buttons radius 1600px
-- [x] Navbar: LeadFlow logo, nav links, Login + Sign Up buttons
-- [x] Careers landing page: hero, values section, open positions list, why work with us, CTA, footer
-- [x] Job detail page: pill tags (type + location), large title, description, APPLY NOW button, more positions section
-- [x] Multi-step application form (step 1: personal info, step 2: experience/skills, step 3: cover letter)
-- [x] Thank you page after submission
-- [x] My Applications page (candidate pipeline view)
+## Frontend (exact LeadFlow files)
+- [x] Apply.tsx — multi-step application form (contact info → work requirements → AI interview → done)
+- [x] HiringPipeline.tsx — admin kanban board with drag-and-drop, candidate detail panel
+- [x] HiringStatus.tsx — candidate magic-link status page (/hiring-status/:token)
+- [x] AIInterview.tsx — Vapi AI voice interview page (/ai-interview/:token)
+- [x] AdminHeader.tsx stub — minimal header with hiring tab
+- [x] AgentDashboard.tsx stub — no-op (ConversationDrawer removed)
+- [x] App.tsx routing: /, /apply, /hiring, /hiring-status/:token, /ai-interview/:token
 
-## Admin Dashboard
-- [x] Admin dashboard: stats cards (active jobs, total applicants, pipeline counts)
-- [x] Job management: create, edit, publish/unpublish, delete jobs
-- [x] Applications pipeline: kanban-style view by status (Applied, Screening, Interview, Offer, Hired, Rejected)
-- [x] Candidate review: view profile, resume link, notes, move through pipeline
-- [x] Notes/comments on applications
-
-## Auth & Access Control
-- [x] Role-based access: admin vs candidate routes
-- [x] Candidate: can apply, view own applications
-- [x] Admin: full management access
-- [x] Admin auto-promoted via OWNER_OPEN_ID env var
+## Cleanup
+- [x] Remove all ConversationDrawer and LeadFlow-specific session/SMS dependencies
+- [x] Remove dead if(false) blocks
+- [x] Zero TypeScript errors
 
 ## Tests
-- [x] Vitest tests for jobs router (list, getById, create with RBAC)
-- [x] Vitest tests for applications router (submit, auth guard)
-- [x] Vitest tests for admin dashboard (stats, RBAC)
-- [x] Vitest tests for auth.logout
+- [x] 10 Vitest tests passing (auth.logout, auth.me, admin.setUserRole RBAC, hiring.getCandidates RBAC, hiring.submitApplication public access)

@@ -4,32 +4,29 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import Home from "./pages/Home";
-import JobDetail from "./pages/JobDetail";
 import Apply from "./pages/Apply";
-import ThankYou from "./pages/ThankYou";
-import MyApplications from "./pages/MyApplications";
-import Admin from "./pages/Admin";
-import ApplicationReview from "./pages/ApplicationReview";
-import JobForm from "./pages/JobForm";
+import HiringPipeline from "./pages/HiringPipeline";
+import HiringStatus from "./pages/HiringStatus";
+import AIInterview from "./pages/AIInterview";
+import Home from "./pages/Home";
 
 function Router() {
   return (
     <Switch>
-      {/* Public */}
+      {/* Root → redirect to /apply */}
       <Route path="/" component={Home} />
-      <Route path="/jobs/:id" component={JobDetail} />
-      <Route path="/apply/:id" component={Apply} />
-      <Route path="/thank-you" component={ThankYou} />
 
-      {/* Candidate */}
-      <Route path="/my-applications" component={MyApplications} />
+      {/* Public application form */}
+      <Route path="/apply" component={Apply} />
 
-      {/* Admin */}
-      <Route path="/admin" component={Admin} />
-      <Route path="/admin/jobs/new" component={JobForm} />
-      <Route path="/admin/jobs/:id/edit" component={JobForm} />
-      <Route path="/admin/applications/:id" component={ApplicationReview} />
+      {/* Candidate status page (magic link) */}
+      <Route path="/hiring-status/:token" component={HiringStatus} />
+
+      {/* AI video interview */}
+      <Route path="/ai-interview/:token" component={AIInterview} />
+
+      {/* Admin hiring pipeline */}
+      <Route path="/hiring" component={HiringPipeline} />
 
       {/* Fallback */}
       <Route path="/404" component={NotFound} />
@@ -41,7 +38,7 @@ function Router() {
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider defaultTheme="dark">
+      <ThemeProvider defaultTheme="light">
         <TooltipProvider>
           <Toaster />
           <Router />
