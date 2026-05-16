@@ -31,8 +31,8 @@ export const hiringRouter = router({
         consentBackground: z.boolean().nullable(),
         experience: z.string().optional(),
         specialties: z.array(z.string()),
-        videoUrl: z.string().url().optional(),
-        bioPhotoUrl: z.string().url().optional(),
+        videoUrl: z.string().optional(),
+        bioPhotoUrl: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
         const db = await getDb();
@@ -363,7 +363,7 @@ export const hiringRouter = router({
     saveInterviewVideo: publicProcedure
       .input(z.object({
         candidateId: z.number(),
-        interviewVideoUrl: z.string().url(),
+        interviewVideoUrl: z.string(),
       }))
       .mutation(async ({ input }) => {
         const db = await getDb();
