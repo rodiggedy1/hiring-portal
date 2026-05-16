@@ -38,3 +38,5 @@
 - [x] Fix cleaning supplies photo upload on thank you page — upload to S3 and save to candidate record
 - [x] Show suppliesPhotoUrl thumbnail in HiringPipeline candidate detail card
 - [x] Mark "Supplies photo" hiringSteps card as done after successful upload in ThankYouStep
+- [x] Add Login button to the app navbar (top-right)
+- [x] Auto-promote owner (OWNER_OPEN_ID) to admin role on first sign-in

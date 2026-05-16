@@ -23,6 +23,9 @@ import {
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { getLoginUrl } from "@/const";
+import { useLocation } from "wouter";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -163,6 +166,42 @@ function InputField({
 
 // ── Step screens ───────────────────────────────────────────────────────────────
 
+function NavAuthButton() {
+  const { user, isAuthenticated, logout } = useAuth();
+  const [, navigate] = useLocation();
+  if (isAuthenticated && user) {
+    return (
+      <div className="flex items-center gap-2 shrink-0">
+        {user.role === "admin" && (
+          <button
+            onClick={() => navigate("/hiring")}
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all hover:opacity-90"
+            style={{ backgroundColor: "rgba(22,163,74,0.15)", border: "1px solid rgba(22,163,74,0.3)", color: "#16a34a" }}
+          >
+            🏠 Pipeline
+          </button>
+        )}
+        <button
+          onClick={() => logout()}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-white transition-all"
+          style={{ backgroundColor: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}
+        >
+          Sign out
+        </button>
+      </div>
+    );
+  }
+  return (
+    <a
+      href={getLoginUrl()}
+      className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:opacity-90 shrink-0"
+      style={{ backgroundColor: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)" }}
+    >
+      Admin Login
+    </a>
+  );
+}
+
 function WelcomeStep({ onNext }: { onNext: () => void }) {
   const DARK_BG = "#0a0f1e";
   const DARK_CARD = "#0f1e3a";
@@ -220,23 +259,8 @@ function WelcomeStep({ onNext }: { onNext: () => void }) {
           <span className="text-xs font-bold tracking-widest uppercase" style={{ color: BRAND_GREEN }}>Now Hiring</span>
         </div>
 
-        {/* Right: positions available — hidden on small screens */}
-        <div className="hidden sm:flex items-center gap-1.5 shrink-0">
-          <span className="text-xs text-gray-500">Positions available:</span>
-          <span className="text-xs font-bold text-white">DC · MD · VA</span>
-        </div>
-
-        {/* Mobile-only compact badge */}
-        <div
-          className="flex sm:hidden items-center gap-1.5 px-3 py-1 rounded-full shrink-0"
-          style={{ backgroundColor: "rgba(22,163,74,0.12)", border: "1px solid rgba(22,163,74,0.25)" }}
-        >
-          <span
-            className="blink-dot w-1.5 h-1.5 rounded-full shrink-0"
-            style={{ backgroundColor: BRAND_GREEN }}
-          />
-          <span className="text-xs font-bold" style={{ color: BRAND_GREEN }}>Now Hiring</span>
-        </div>
+        {/* Right: auth button */}
+        <NavAuthButton />
       </header>
 
       {/* ── Two-column body — fills remaining viewport height ── */}
