@@ -45,3 +45,4 @@
 - [x] Add adminLogin tRPC procedure that validates credentials and issues a session cookie
 - [x] Protect /hiring route — redirect to /login if not authenticated
 - [x] Replace "Admin Login" navbar button to link to /login
+- [x] Remove broken dashboard link from the app
