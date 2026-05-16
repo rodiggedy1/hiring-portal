@@ -46,3 +46,4 @@
 - [x] Protect /hiring route — redirect to /login if not authenticated
 - [x] Replace "Admin Login" navbar button to link to /login
 - [x] Remove broken dashboard link from the app
+- [x] Auto-select most recent applicant on pipeline load so detail panel opens by default

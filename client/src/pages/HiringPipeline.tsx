@@ -1804,6 +1804,17 @@ export default function HiringPipeline() {
       stageOverrides[c.id] ? { ...c, stage: stageOverrides[c.id] } : c
     );
   }, [candidatesQuery.data, stageOverrides]);
+  // Auto-select the most recent applicant on first load so the detail panel is open by default
+  const hasAutoSelected = useRef(false);
+  useEffect(() => {
+    if (hasAutoSelected.current) return;
+    if (allCandidates.length === 0) return;
+    // Pick the candidate with the highest id (most recently submitted)
+    const newest = allCandidates.reduce((a, b) => (b.id > a.id ? b : a));
+    setSelectedCandidate(newest);
+    hasAutoSelected.current = true;
+  }, [allCandidates]);
+
   // Keep selectedCandidate in sync after stage advances
   useEffect(() => {
     if (!selectedCandidate) return;
