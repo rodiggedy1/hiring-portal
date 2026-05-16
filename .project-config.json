@@ -1,0 +1,43 @@
+{
+  "build_command": "pnpm run build",
+  "capabilities": [
+    "server",
+    "db",
+    "user"
+  ],
+  "dev_command": "pnpm run dev",
+  "env_vars": {
+    "DATABASE_URL": "mysql://QXWpcJKwPBoGqNG.e35464ecf4a8:5rZ93uMks3gi7FE3vISC@gateway04.us-east-1.prod.aws.tidbcloud.com:4000/bbeRN3sM2Tg8Czh8XvMEZz?ssl={\"rejectUnauthorized\":true}"
+  },
+  "experiments": [
+    "no_db_push"
+  ],
+  "git_remote": {
+    "repo_url": "s3://vida-prod-gitrepo/webdev-git/310519663254023424/bbeRN3sM2Tg8Czh8XvMEZz",
+    "access_key_id": "ASIAZV3A2ECZD7U7Y5GQ",
+    "secret_access_key": "BlRmXXO5U0MYEKuYWdBPB/4yWNepcyg2AzDkygUN",
+    "session_token": "IQoJb3JpZ2luX2VjELz//////////wEaCXVzLWVhc3QtMSJHMEUCIQCgxJjTJvafVYCyhwc3Ag/mamuF2FjYoZf+iqOS29H3YwIgUPrTSId4UfBEaRvxwsqC0lPJUpkT/Y5zn5Z4D88NNJgq/wMIhP//////////ARAEGgw2NjUzODYwOTg4NjYiDNTsZGjan3BG1XhJVirTA38voEtEj38ftZLYz/TetD+v/sRtL5jwMkzhQhw2aXNSQ5oCK4624IVeKEB6GjBJikWaZ0VgfLrmDj3/MeMrFED5/DWCM+irLA/Sb60x/goL6xBJPOSYvOA+JaSjTwwAnEtFMJAV8vvHoOOxi1uXFiz0VC5dNrf0WKLvHjNbmo7QK8Km/xgRbQJNEWxlKGVK3bGrlp74aOO2rn357FZL67QYh3BXXBBTYS7TzuwrWNbeJtoQZG+RKMCb577fedUlbzGf6Jc8Yxq5VZe5Ta/bWkhF40/r8Xy5Sknphz8uYh2tjo71M+pvnfAS5iVjtIvXa2Ze7WsBVryGSUQP/Gz87MBvMegCagO6oCdV3TCP/cfWbOMpAyDIDUcJMRbFUPubHapnUsPGsvuTL8K+SoCDdeGaWt5kWyl2Jp5pB6HaNprQr0esqYMeuvMC7kVqEGI8t1XsqC2kgno647kvqMv8g0MK8TGF3Z/M1rj6tPGVUMOp3ef4gpCYHPfs8HRrr6RuknHFU6NxMqH9PDjIxRKbti5F4YRcQ8r/OcqjA0k8HAdCfc03l2qooSJN7gfKVaF0s3+hyfKTpakD3KyWjFsrn0ppI19Bh6RNtSpJDXu2WD1klpAoMLm9n9AGOp0Bgf6EtsYIiPU7tLRwcjq+u4HvV1odJ07Vr682sF+6PH63lRTvol39tLq4H8aPjjVh6uDBnRM6Xy+qCxcnLQNPo4y+E2iVkT1St96bdjcqc7j6uZvvTv/PRZSCYXUiCFq5PnLDtPAb5/vy0/yw0XtlNWz9CgDzq2Rk/yAPEK8pCrYb5GSx4acyBtEUEe6SP6/Z3CKx5wEdWrGCS64xzg==",
+    "expiration": "2026-05-16T15:04:25.000Z"
+  },
+  "name": "hiring-portal",
+  "path": "/home/ubuntu/hiring-portal",
+  "port": 3000,
+  "secrets": {
+    "BUILT_IN_FORGE_API_KEY": "DttxvB3yBwphyiQpwsvnBo",
+    "BUILT_IN_FORGE_API_URL": "https://forge.manus.ai",
+    "JWT_SECRET": "GFHRwMCkBhorMhSgwc84Xw",
+    "OAUTH_SERVER_URL": "https://api.manus.im",
+    "OWNER_NAME": "Rohan G",
+    "OWNER_OPEN_ID": "AbLUcNGeEEHV8cVJxD5ksX",
+    "VITE_ANALYTICS_ENDPOINT": "https://manus-analytics.com",
+    "VITE_ANALYTICS_WEBSITE_ID": "1c281ce1-7771-4567-b6cd-0ddcef189121",
+    "VITE_APP_ID": "bbeRN3sM2Tg8Czh8XvMEZz",
+    "VITE_APP_LOGO": "",
+    "VITE_APP_TITLE": "Hiring Platform Susan",
+    "VITE_FRONTEND_FORGE_API_KEY": "eBVRKqn6yT3uySRDY5GLqK",
+    "VITE_FRONTEND_FORGE_API_URL": "https://forge.manus.ai",
+    "VITE_OAUTH_PORTAL_URL": "https://manus.im"
+  },
+  "template_id": "web-db-user",
+  "test_command": "pnpm test"
+}
