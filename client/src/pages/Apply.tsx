@@ -24,7 +24,6 @@ import {
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { getLoginUrl } from "@/const";
 import { useLocation } from "wouter";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
@@ -192,13 +191,13 @@ function NavAuthButton() {
     );
   }
   return (
-    <a
-      href={getLoginUrl()}
+    <button
+      onClick={() => navigate("/login")}
       className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:opacity-90 shrink-0"
       style={{ backgroundColor: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)" }}
     >
       Admin Login
-    </a>
+    </button>
   );
 }
 

@@ -40,3 +40,8 @@
 - [x] Mark "Supplies photo" hiringSteps card as done after successful upload in ThankYouStep
 - [x] Add Login button to the app navbar (top-right)
 - [x] Auto-promote owner (OWNER_OPEN_ID) to admin role on first sign-in
+- [x] Add ADMIN_USERNAME and ADMIN_PASSWORD secrets
+- [x] Build /login page with username/password form
+- [x] Add adminLogin tRPC procedure that validates credentials and issues a session cookie
+- [x] Protect /hiring route — redirect to /login if not authenticated
+- [x] Replace "Admin Login" navbar button to link to /login
