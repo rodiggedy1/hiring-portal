@@ -236,12 +236,12 @@ function CandidateCard({
       {/* Name row */}
       <div className="flex items-center gap-3">
         <div
-          className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold shrink-0 overflow-hidden"
+          className="w-9 h-9 rounded-full shrink-0 overflow-hidden relative"
           style={{ backgroundColor: "#edf0f4", color: "#64748b", fontSize: "12px", letterSpacing: "0.02em", border: "1px solid #e2e8f0" }}
         >
           {candidate.bioPhotoUrl
-            ? <img src={candidate.bioPhotoUrl} alt={candidate.name} className="w-full h-full object-cover" />
-            : candidate.initials
+            ? <img src={candidate.bioPhotoUrl} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+            : <span style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", fontWeight: 600 }}>{candidate.initials}</span>
           }
         </div>
         <div className="flex-1 min-w-0">
@@ -823,12 +823,12 @@ function ApplicationDetailsModal({ candidate, onClose }: { candidate: Candidate;
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
           <div
-            className="rounded-full overflow-hidden shrink-0 flex items-center justify-center font-semibold"
+            className="rounded-full overflow-hidden shrink-0 relative"
             style={{ width: 64, height: 64, backgroundColor: "#f1f5f9", color: "#64748b", fontSize: 18, border: "1px solid #e2e8f0" }}
           >
             {candidate.bioPhotoUrl
-              ? <img src={candidate.bioPhotoUrl} alt={candidate.name} className="w-full h-full object-cover" />
-              : candidate.initials
+              ? <img src={candidate.bioPhotoUrl} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+              : <span style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 600 }}>{candidate.initials}</span>
             }
           </div>
           <div>
@@ -989,12 +989,12 @@ function CandidateDetail({ candidate, onScoreUpdated, onStageAdvanced }: { candi
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3">
           <div
-            className="rounded-full flex items-center justify-center font-semibold shrink-0 overflow-hidden"
+            className="rounded-full shrink-0 overflow-hidden relative"
             style={{ width: 56, height: 56, backgroundColor: "#f1f5f9", color: "#64748b", fontSize: 15, border: "1px solid #e2e8f0" }}
           >
             {candidate.bioPhotoUrl
-              ? <img src={candidate.bioPhotoUrl} alt={candidate.name} className="w-full h-full object-cover" />
-              : candidate.initials
+              ? <img src={candidate.bioPhotoUrl} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+              : <span style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, fontWeight: 600 }}>{candidate.initials}</span>
             }
           </div>
           <div className="min-w-0">
