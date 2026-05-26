@@ -40,8 +40,7 @@ export function registerStorageProxy(app: Express) {
         return;
       }
 
-      // Pipe the bytes through Express so the browser never sees the cross-origin
-      // CloudFront URL (which would be blocked as a broken image in some browsers).
+      // v2: Pipe bytes directly — no redirect. Browser never sees cross-origin CloudFront URL.
       const imageResp = await fetch(url);
       if (!imageResp.ok) {
         res.status(502).send("Storage fetch error");
