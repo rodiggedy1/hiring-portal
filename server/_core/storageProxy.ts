@@ -40,8 +40,18 @@ export function registerStorageProxy(app: Express) {
         return;
       }
 
-      res.set("Cache-Control", "no-store");
-      res.redirect(307, url);
+      // Pipe the bytes through Express so the browser never sees the cross-origin
+      // CloudFront URL (which would be blocked as a broken image in some browsers).
+      const imageResp = await fetch(url);
+      if (!imageResp.ok) {
+        res.status(502).send("Storage fetch error");
+        return;
+      }
+      const contentType = imageResp.headers.get("content-type") || "application/octet-stream";
+      res.set("Content-Type", contentType);
+      res.set("Cache-Control", "public, max-age=3600");
+      const buf = await imageResp.arrayBuffer();
+      res.send(Buffer.from(buf));
     } catch (err) {
       console.error("[StorageProxy] failed:", err);
       res.status(502).send("Storage proxy error");
