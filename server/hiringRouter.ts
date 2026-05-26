@@ -9,6 +9,7 @@ import { invokeLLM } from "./_core/llm";
 import { publicProcedure, agentProcedure, router } from "./_core/trpc";
 import { getDb } from "./db";
 import { sendSms } from "./openphone";
+import { storageGetSignedUrl } from "./storage";
 
 export const hiringRouter = router({
     /**
@@ -148,7 +149,7 @@ export const hiringRouter = router({
           .orderBy(desc(candidates.createdAt));
 
         const unreadPhones = new Set<string>();
-        return rows.map(r => {
+        return Promise.all(rows.map(async r => {
           const raw = r.phone.replace(/[^\d]/g, "");
           const e164 = raw.length === 10 ? `+1${raw}` : `+${raw}`;
           return {
@@ -164,7 +165,7 @@ export const hiringRouter = router({
             zip: r.zip ?? null,
             stage: r.stage,
             experience: r.experience ?? null,
-            bioPhotoUrl: r.bioPhotoUrl ?? null,
+            bioPhotoUrl: r.bioPhotoUrl ? await storageGetSignedUrl(r.bioPhotoUrl.replace(/^\/manus-storage\//, "")).catch(() => r.bioPhotoUrl) : null,
             videoUrl: r.videoUrl ?? null,
             interviewVideoUrl: r.interviewVideoUrl ?? null,
             specialties: r.specialties ? JSON.parse(r.specialties) as string[] : [],
@@ -175,11 +176,11 @@ export const hiringRouter = router({
             aiScore: r.aiScore ?? null,
             aiSummary: r.aiSummary ?? null,
             interviewCallId: r.interviewCallId ?? null,
-            suppliesPhotoUrl: r.suppliesPhotoUrl ?? null,
+            suppliesPhotoUrl: r.suppliesPhotoUrl ? await storageGetSignedUrl(r.suppliesPhotoUrl.replace(/^\/manus-storage\//, "")).catch(() => r.suppliesPhotoUrl) : null,
             createdAt: r.createdAt instanceof Date ? r.createdAt.getTime() : Number(r.createdAt),
             hasUnreadReply: unreadPhones.has(e164),
           };
-        });
+        }));
       }),
 
     /**
