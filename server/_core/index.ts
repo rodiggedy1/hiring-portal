@@ -32,14 +32,15 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 async function startServer() {
   const app = express();
   const server = createServer(app);
-  // Configure body parser with larger size limit for file uploads
+  // Raw binary parser for video/image uploads — MUST come before express.json()
+  // so the binary body isn't consumed/corrupted by the JSON parser first
+  app.use("/api/upload/video", express.raw({ type: ["video/webm", "video/mp4", "video/*", "image/*", "application/octet-stream"], limit: "200mb" }));
+  registerVideoUploadRoute(app);
+  // Configure body parser for all other routes
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   registerStorageProxy(app);
   registerOAuthRoutes(app);
-  // Raw binary parser for video/image uploads
-  app.use("/api/upload/video", express.raw({ type: ["video/webm", "video/mp4", "video/*", "image/*"], limit: "200mb" }));
-  registerVideoUploadRoute(app);
   // tRPC API
   app.use(
     "/api/trpc",
