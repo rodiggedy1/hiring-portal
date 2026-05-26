@@ -49,3 +49,4 @@
 - [x] Auto-select most recent applicant on pipeline load so detail panel opens by default
 - [x] Move Admin Login link from top-right navbar to the footer
 - [x] Replace top-right navbar slot with something more compelling (e.g. social proof / CTA)
+- [x] Fix storage proxy 404 in production — changed /manus-storage/* to /manus-storage/:path(*) for Express 4 named wildcard compatibility
